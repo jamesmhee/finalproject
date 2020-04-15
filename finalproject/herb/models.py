@@ -12,16 +12,29 @@ class User(models.Model):
     address = models.TextField()
     province = models.TextField()
 
+class Product(models.Model):
+    name = models.CharField(max_length=255)
+    quanlity = models.IntegerField(max_length=10)
+    price = models.FloatField()
+
+class Promotion(models.Model):
+    name = models.CharField(max_length=255)
+    discount = models.IntegerField(max_length=10)
+    end_promotion = {
+        ('S', 'SALE'),
+        ('NS', 'NOTSALE')
+    }
+
 class Order(models.Model):
     date = models.DateField(null=True, blank=True)
-    delevery_location = models.TextField(blank=true)
+    delevery_location = models.TextField(blank=True)
     total_price = models.FloatField()
     payment_status = {
         ('AR' ,'Arrived'),
         ('NA' ,'Not_Arrived')
     }
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    promotion_id = models.ForeignKey(promotion, on_delete=models.CASCADE)
+    promotion_id = models.ForeignKey(Promotion, on_delete=models.CASCADE)
 
 class Payment(models.Model):
     date = models.DateField(null=True, blank=True)
@@ -34,19 +47,7 @@ class Order_Product(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-class Product(models.Model):
-    name = models.CharField(max_length=255)
-    quanlity = models.IntegerField(max_length=10)
-    price = models.FloatField()
-
 class Image(models.Model):
     image = models.ImageField()
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-class Promotion(models.Model):
-    name = models.CharField(max_length=255)
-    discount = models.IntegerField(max_length=10)
-    end_promotion = {
-        ('S', 'SALE'),
-        ('NS', 'NOTSALE')
-    }
