@@ -1,9 +1,16 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
+
 
 # Create your views here.
-def nidex(request):
-    
-def registerlogin(request):#หน้าสมัครสมาชิกและล็อกอิน
+def index(request):
+    context = {}
+    return render(request, template_name='index.html', context = context)
+
+def login(request):#หน้าสมัครสมาชิกและล็อกอิน
     if request.user.is_authenticated:
         return redirect('index')
     else:
@@ -23,10 +30,10 @@ def registerlogin(request):#หน้าสมัครสมาชิกแล�
 
     return render(request, template_name='login.html', context = context)
 
-@login_required(login_url='registerlogin')
+@login_required
 def logoutUser(request):
     logout(request)
-    return redirect('registerlogin')
+    return redirect('login')
 
 def register(request):#หน้าสมัครสมาชิกและล็อกอิน
     if request.user.is_authenticated:
@@ -47,7 +54,7 @@ def register(request):#หน้าสมัครสมาชิกและล
     context = {'form':form}
     return render(request, "register.html", context)
 
-@login_required(login_url='registerlogin')
+@login_required
 def changepassword(request):#หน้่าสมาชิกเปลี่ยนรหัส
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
