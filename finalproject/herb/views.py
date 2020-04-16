@@ -1,16 +1,34 @@
-from django.contrib.auth import authenticate, login, logout
+from http.client import HTTPResponse
+from logging import warning
+from tokenize import group
+from urllib.request import Request
+
+from django.contrib import messages
+from django.contrib.auth import (authenticate, login, logout,
+                                 update_session_auth_hash)
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
+from django.contrib.auth.models import Group, User
+from django.contrib.messages.api import success
 from django.shortcuts import redirect, render
+from django.template.context_processors import request
+
+from .forms import CreateUserForm, AddproductForm
+from .models import Image, Order_Product, Payment, Product, Promotion
 
 
 # Create your views here.
 def index(request):
-    context = {}
-    return render(request, template_name='index.html', context = context)
+    search = request.GET.get('searchbox')
+    product_list = Product.objects.filter(name=search)
+    if search != '' and search is not None:
+        product_list = Product.objects.filter(title__icontains=search, name=search)
 
-def login(request):#หน้าสมัครสมาชิกและล็อกอิน
+    context = {'product':product_list, 'searchbox': search}
+    
+    return render(request, 'index.html', context=context)
+
+def my_login(request): #หน้าสมัครสมาชิกและล็อกอิน
     if request.user.is_authenticated:
         return redirect('index')
     else:
@@ -28,14 +46,15 @@ def login(request):#หน้าสมัครสมาชิกและล็
     
     context = {}
 
-    return render(request, template_name='login.html', context = context)
-
-@login_required
-def logoutUser(request):
+    return render(request, "login.html", context=context)
+    
+@login_required(login_url='login')
+def my_logout(request):
     logout(request)
     return redirect('login')
 
-def register(request):#หน้าสมัครสมาชิกและล็อกอิน
+
+def my_register(request):
     if request.user.is_authenticated:
         return redirect('index')
     else:
@@ -55,20 +74,30 @@ def register(request):#หน้าสมัครสมาชิกและล
     return render(request, "register.html", context)
 
 @login_required
-def changepassword(request):#หน้่าสมาชิกเปลี่ยนรหัส
+def change_mypassword(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, 'เปลี่ยนรหัสผ่านใหม่เรียบร้อย')            
+            messages.success(request, 'เปลี่ยนรหัสผ่านใหม่เรียบร้อย')
             return redirect('changepassword')
         else:
             messages.warning(request, 'รหัสผ่านปัจจุบันผิด หรือ รหัสไม่ตรงกัน หรือ ไม่ตรงตามเงื่อนไข')
     else:
         form = PasswordChangeForm(request.user)
-    context = {'form':form}
-    return render(request, 'user.html', context)
+    context = {'form':form}    
+    return render(request, 'changepassword.html', context)
 
-def forgotpassword(request):#หน้าลืมรหัสผ่าน
-    return render(request, template_name='forgot.html')  
+def create_product(request):
+    if request.method == 'POST':
+        if request.POST.get('name') and request.POST.get('quanlity') and request.POST.get('price'):
+            product=Product()
+            product.name = request.POST.get('name')
+            product.quanlity = request.POST.get('quanlity')
+            product.price = request.POST.get('price')
+            product.save()
+        return redirect('index')
+    else:
+        pass
+    return render(request, "createproduct.html")

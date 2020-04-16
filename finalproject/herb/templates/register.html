@@ -1,4 +1,46 @@
 {% extends 'base.html' %}
 {% block content %}
-    register
+    <div class="container-fluid border shadow p-3 mb-5 bg-white rounded-lg" data-aos="fade-up">
+        <h1 class="text-center text-info">สมัครสมาชิก | Sign Up</h1>
+        <hr><br>
+        {% for message in messages %}
+            <div data-aos="fade-right" class="text-center h5 alert alert-warning">{{message}} <a href="{%url 'login' %}">เข้าสู่ระบบ</a></div>
+        {% endfor %}           
+        <form method="POST" action="">
+        {% csrf_token %}
+            <div class="form-group">
+                <label for="username" class="h5 text-info">อีเมลล์ | Email:</label><label class="text-danger"> *</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter Your Email" name="email" value="{{email}}" required/>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="h5 text-info">ชื่อ : Firstname</label><label class="text-danger"> *</label>
+                <input type="text" class="form-control" id="first_name" placeholder="Enter Your Firstname" name="first_name" value="{{first_name}}" required/>
+            </div>
+            <div class="form-group">
+                <label for="lastname" class="h5 text-info">นามสกุล | Lastname:</label><label class="text-danger"> *</label>
+                <input type="text" class="form-control" id="last_name" placeholder="Enter Your Lastname" name="last_name" value="{{last_name}}" required/>
+            </div>                        
+            <div class="form-group">
+                <label for="username" class="h5 text-info">ชื่อผู้ใช้งาน | Username:</label><label class="text-danger"> *</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter Your Username" name="username" value="{{username}}" required/>
+            </div>
+            <div class="form-group">
+                <label for="password1" class="h5 text-info">รหัสผ่าน | Password:</label><label class="text-danger"> *</label>
+                <input type="password" class="form-control" id="password1" placeholder="Enter Your Password" name="password1" value="{{password1}}" required/><br>
+                <p class="alert alert-info h6 "><strong>Notice !!</strong><br>- รหัสผ่านต้องห้ามเหมือนหรือใกล้เคียงกับ Username<br>- รหัสผ่านต้องมีอย่างร้อย 8 ตัวอักษรหรือมากกว่านั้น<br>- รหัสผ่านต้องห้ามเป็นแบบทั่วไป เช่น 1234 , 1111 , 123456789 , abcd
+            <br>- รหัสผ่านต้องประกอบไปด้วยตัวอักษร (a-z , A-Z) ตัวเลข (0-9) เครื่องหมายพิเศษ (!@#$%^&*()_+|~-=\`{}[]:";'<>?,./)</p>                
+            </div>
+            <div class="form-group">
+                <label for="password2" class="h5 text-info">กรอกรหัสผ่านอีกครั้ง | Confirm Password:</label><label class="text-danger"> *</label>
+                <input type="password" class="form-control" id="password2" placeholder="Enter Your Password Again" name="password2" value="{{password2}}" required/>
+            </div><br>
+            <p class="text-center text-info h5">คุณมีบัญชีผู้ใช้งานแล้วใช่ไหม ? (If you have an account ?) <a href="{% url 'login' %}">เข้าสู่ระบบ Sing In</p></a>
+            <br>   
+            <div class="text-center">         
+            <button type="submit" name="createuser" class="btn btn-info btn-lg col-md-3" style="margin-right:10px;">✔️ Register</button>
+            <button type="reset" class="btn btn-warning btn-lg col-md-3">⚠️ Reset</button>
+            </div>
+        </form>
+        <br/><br/>
+    </div>
 {% endblock  %}

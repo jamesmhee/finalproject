@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+    <br>
+    <div class="container-fluid border shadow p-3 mb-5 bg-white rounded-lg" data-aos="fade-up">
+    <h1 class="text-info">✎ เขียนบทความใหม่</h1>
+    <hr>
+    <form method="POST" action="{% url 'createproduct' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="h5 text-info" for="name" >📌 ชื่อสินค้า</label><label class="text-danger">*</label>
+            <input style="text" class="form-control" name="name" value="{{name}}" id="name" required/>
+            <br>    
+            <label class="h5 text-info" for="quanlity" >📌จำนวนสินค้า</label><label class="text-danger">*</label>
+            <input style="text" class="form-control" name="quanlity" value="{{quanlity}}" id="quanlity" required/>
+            <br>
+            <label class="h5 text-info" for="price" >📌 ราคา</label><label class="text-danger">*</label>
+            <input style="text" class="form-control" name="price" value="{{price}}" id="price" required/>
+            <br>  
+            <div class="text-center">         
+            <button type="submit" class="btn btn-info btn-lg col-md-3" style="margin-right:10px;">✔️ บันทึกข้อมูล</button>
+            <button type="reset" class="btn btn-warning btn-lg col-md-3">⚠️ ล้างข้อมูล</button>
+            </div>
+            </div>
+        </div>
+    </form>    
+{% endblock %}
+{% block footer %}
+{% endblock %}

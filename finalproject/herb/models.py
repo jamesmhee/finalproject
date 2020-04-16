@@ -1,25 +1,20 @@
 from django.db import models
 from setuptools.command.upload import upload
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User as U
+
 
 # Create your models here.
 
-class User(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    username = models.CharField(max_length=255)
-    password = models.CharField(max_length=255, null=False)
-    email = models.EmailField(null=False)
-    address = models.TextField()
-    province = models.TextField()
-
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    quanlity = models.IntegerField(max_length=10)
+    quanlity = models.IntegerField()
     price = models.FloatField()
 
 class Promotion(models.Model):
     name = models.CharField(max_length=255)
-    discount = models.IntegerField(max_length=10)
+    discount = models.IntegerField()
     end_promotion = {
         ('S', 'SALE'),
         ('NS', 'NOTSALE')
@@ -33,7 +28,7 @@ class Order(models.Model):
         ('AR' ,'Arrived'),
         ('NA' ,'Not_Arrived')
     }
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(U, on_delete=models.CASCADE)
     promotion_id = models.ForeignKey(Promotion, on_delete=models.CASCADE)
 
 class Payment(models.Model):
@@ -42,7 +37,7 @@ class Payment(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
 
 class Order_Product(models.Model):
-    unit = models.IntegerField(max_length=10)
+    unit = models.IntegerField()
     unit_price = models.FloatField()
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -50,4 +45,3 @@ class Order_Product(models.Model):
 class Image(models.Model):
     image = models.ImageField()
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-
